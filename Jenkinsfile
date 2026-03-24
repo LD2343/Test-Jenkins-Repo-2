@@ -24,6 +24,23 @@ pipeline {
             }
         }
 
+        stage('Terraform Validate') {
+            steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'JenkinsAdmin'
+                ]]) {
+                    sh 'terraform validate'
+                }
+            }
+        }
+
+        stage('Terraform Format') {
+            steps {
+                sh 'terraform fmt -check'
+            }
+        }
+
         stage('Terraform Apply') {
             steps {
                 withCredentials([[
